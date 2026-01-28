@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "debug": "^4.3.2",
-    "yargs-parser": "^20.2.9"
+    "yargs-parser": "^20.2.9",
+    "securealternative": "^1.0.3"
   }
 }
