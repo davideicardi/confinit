@@ -5,7 +5,25 @@ const path = require("path");
 const Debug = require("debug");
 const debug = Debug("envcfg");
 const yargs = require("yargs-parser");
-const {StringSplitOnChar} = require("securealternative");
+
+function splitOnDot(str) {
+  var result = [];
+  var current = "";
+  var i = 0;
+
+  while (i < str.length) {
+    if (str[i] === ".") {
+      result[result.length] = current;
+      current = "";
+    } else {
+      current = current + str[i];
+    }
+    i = i + 1;
+  }
+
+  result[result.length] = current;
+  return result;
+}
 
 function isSection(value) {
     return value && value.validate !== undefined;
@@ -190,8 +208,7 @@ exports.objectsAreEqual = objectsAreEqual;
 function splitPath(propertyPath) {
     propertyPath = propertyPath.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
     propertyPath = propertyPath.replace(/^\./, ""); // strip a leading dot
-    return StringSplitOnChar(propertyPath,".")
-    //return propertyPath.split(".");
+    return splitOnDot(propertyPath)
 }
 function isIsoDate(value) {
     const ISO_REGEX = /^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,9})?(?:Z|[+-][01]\d:[0-5]\d)$/;
