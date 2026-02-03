@@ -18,8 +18,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/node": "^13.13.2",
     "@types/mocha": "9.0.0",
+    "@types/node": "^13.13.52",
     "mocha": "9.0.3",
     "typescript": "4.3.5"
   },

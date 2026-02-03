@@ -10,6 +10,25 @@ export interface IConfigSection {
 	validate(): void;
 }
 
+function splitOnDot(str: string): string[] {
+  var result = [];
+  var current = "";
+  var i = 0;
+
+  while (i < str.length) {
+    if (str[i] === ".") {
+      result[result.length] = current;
+      current = "";
+    } else {
+      current = current + str[i];
+    }
+    i = i + 1;
+  }
+
+  result[result.length] = current;
+  return result;
+}
+
 function isSection(value: any): value is IConfigSection {
 	return value && (value as IConfigSection).validate !== undefined;
 }
@@ -132,16 +151,26 @@ export function setDeepProperty(obj: {[key: string]: any}, propertyPath: string,
 }
 
 function setProp(obj: {[key: string]: any}, property: string, value: any): void {
-	if (!obj.hasOwnProperty(property)) {
+	/*if (!obj.hasOwnProperty(property)) {
 		throw new Error(`Property '${property}' is not valid`);
-	}
+	}*/
+	if(property == "constructor" || property == "prototype" || property == "__proto__"){
+    	throw new Error(`Property '${property}' is not valid`);
+   	}else if(!obj.hasOwnProperty(property)){
+    	throw new Error(`Property '${property}' is not valid`);
+   	}
 	obj[property] = value;
 }
 
 function getProp(obj: {[key: string]: any}, property: string): any {
-	if (!obj.hasOwnProperty(property)) {
+	/*if (!obj.hasOwnProperty(property)) {
 		throw new Error(`Property '${property}' is not valid`);
-	}
+	}*/
+	if(property == "constructor" || property == "prototype" || property == "__proto__"){
+    	throw new Error(`Property '${property}' is not valid`);
+   	}else if(!obj.hasOwnProperty(property)){
+    	throw new Error(`Property '${property}' is not valid`);
+   	}
 	return obj[property];
 }
 
@@ -218,7 +247,7 @@ export function objectsAreEqual(obj1: any, obj2: any, leftOnly: boolean = false)
 function splitPath(propertyPath: string): string[] {
 	propertyPath = propertyPath.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
 	propertyPath = propertyPath.replace(/^\./, "");           // strip a leading dot
-	return propertyPath.split(".");
+	return splitOnDot(propertyPath)
 }
 
 function isIsoDate(value: string): boolean {
