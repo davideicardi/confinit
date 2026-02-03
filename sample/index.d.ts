@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import * as confinit from "../index";
 export declare class Section1Config implements confinit.IConfigSection {
     url: string;

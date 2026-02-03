@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.objectsAreEqual = exports.getDeepProperty = exports.setDeepProperty = exports.applyCommandArgs = exports.applyConfigFile = exports.applyEnvVariables = exports.validate = void 0;
+exports.validate = validate;
+exports.applyEnvVariables = applyEnvVariables;
+exports.applyConfigFile = applyConfigFile;
+exports.applyCommandArgs = applyCommandArgs;
+exports.setDeepProperty = setDeepProperty;
+exports.getDeepProperty = getDeepProperty;
+exports.objectsAreEqual = objectsAreEqual;
 const path = require("path");
 const Debug = require("debug");
 const debug = Debug("envcfg");
@@ -36,7 +42,6 @@ function validate(configuration) {
         }
     }
 }
-exports.validate = validate;
 function applyEnvVariables(configuration, envVariables, envPrefix = "NODE_ENV") {
     for (const envKey in envVariables) {
         if (!envVariables.hasOwnProperty(envKey)
@@ -52,7 +57,6 @@ function applyEnvVariables(configuration, envVariables, envPrefix = "NODE_ENV") 
         setDeepProperty(configuration, configKey, envVariables[envKey]);
     }
 }
-exports.applyEnvVariables = applyEnvVariables;
 function applyConfigFile(configuration, configFile) {
     debug(`Loading config form ${configFile}`);
     const config = require(configFile);
@@ -64,7 +68,6 @@ function applyConfigFile(configuration, configFile) {
         Object.assign(configuration[configProperty], config[configProperty] || {});
     }
 }
-exports.applyConfigFile = applyConfigFile;
 function applyCommandArgs(configuration, argv) {
     if (!argv || !argv.length) {
         return;
@@ -100,7 +103,6 @@ function applyCommandArgs(configuration, argv) {
         setDeepProperty(configuration, configKey, parsedArgv[key]);
     }
 }
-exports.applyCommandArgs = applyCommandArgs;
 function setDeepProperty(obj, propertyPath, value) {
     if (!obj) {
         throw new Error("Invalid object");
@@ -120,7 +122,6 @@ function setDeepProperty(obj, propertyPath, value) {
     setProp(obj, pathParts[pathPartsLen - 1], value);
     return;
 }
-exports.setDeepProperty = setDeepProperty;
 function setProp(obj, property, value) {
     /*if (!obj.hasOwnProperty(property)) {
         throw new Error(`Property '${property}' is not valid`);
@@ -160,7 +161,6 @@ function getDeepProperty(obj, propertyPath) {
     }
     return ret;
 }
-exports.getDeepProperty = getDeepProperty;
 function objectsAreEqual(obj1, obj2, leftOnly = false) {
     if (typeof (obj1) === "function") {
         throw new Error("Function compare not supported");
@@ -203,7 +203,6 @@ function objectsAreEqual(obj1, obj2, leftOnly = false) {
     }
     return true;
 }
-exports.objectsAreEqual = objectsAreEqual;
 function splitPath(propertyPath) {
     propertyPath = propertyPath.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
     propertyPath = propertyPath.replace(/^\./, ""); // strip a leading dot
